@@ -6,11 +6,12 @@ classDiagram
 
     class SmartGrids {
         - plantas: Map~String, Planta~
-        - registros: List~RegistroMonitoreo~
         + registrarPlanta(Planta p)
         + cambiarEstado(String nombre)
+        + registrarMonitoreo(...)
         + calcularHistograma(...)
         + rankingEnergia()
+        + limpiarRegistrosVacios()
     }
 
     class Planta {
@@ -20,7 +21,11 @@ classDiagram
         # boolean activa
         # LocalDateTime fechaPuestaEnMarcha
         # List~PeriodoInactividad~ inactividades
+        # List~RegistroMonitoreo~ registrosMonitoreo
         + abstract boolean cumpleCuota(...)
+        + agregarRegistro(RegistroMonitoreo r)
+        + double calcularTotalGenerado()
+        + int limpiarRegistrosSinDatos()
     }
 
     class PlantaRenovable {
@@ -87,6 +92,5 @@ classDiagram
 
     %% Relaciones de Asociación
     SmartGrids "1" --> "*" Planta : administra
-    SmartGrids "1" --> "*" RegistroMonitoreo : almacena
-    Planta "1" --> "*" PeriodoInactividad : registra
-    RegistroMonitoreo "*" --> "1" Planta : corresponde a
+    Planta "1" --> "*" PeriodoInactividad : registra inactividades
+    Planta "1" --> "*" RegistroMonitoreo : almacena sus registros
